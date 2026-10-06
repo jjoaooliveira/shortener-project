@@ -14,7 +14,7 @@ public class Url {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true, length = 10)
+    @Column(nullable = false, unique = true, length = 8)
     private Code code;
 
     @Column(name = "original_url", nullable = false, length = 2048)
