@@ -1,3 +1,15 @@
 spring:
   application:
     name: shortener
+
+  datasource:
+    url: jdbc:h2:mem:api-shortener-dev
+    username: dev
+    password: dev
+    driverClassName: org.h2.Driver
+
+  jpa:
+    database: H2
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop 
