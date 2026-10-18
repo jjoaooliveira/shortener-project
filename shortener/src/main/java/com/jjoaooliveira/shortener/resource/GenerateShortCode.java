@@ -1,4 +1,4 @@
-package com.jjoaooliveira.shortener.url;
+package com.jjoaooliveira.shortener.resource;
 
 import org.springframework.stereotype.Service;
 
