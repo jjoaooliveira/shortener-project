@@ -1,4 +1,4 @@
-package com.jjoaooliveira.shortener.resource;
+package com.jjoaooliveira.shortener.resource.domain;
 
 import java.util.Objects;
 

@@ -1,4 +1,4 @@
-package com.jjoaooliveira.shortener.resource;
+package com.jjoaooliveira.shortener.resource.domain;
 
 import org.junit.jupiter.api.Test;
 
