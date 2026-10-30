@@ -3,6 +3,7 @@ package com.jjoaooliveira.shortener.resource.domain;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -12,6 +13,7 @@ class ResourceTest {
     private static final Code CODE = new Code("Ab12Cd34");
     private static final Address ADDRESS = new Address("https://www.example.com/a/b?foo=bar&baz=123#section");
     private static final Instant CREATED_AT = Instant.parse("2026-01-01T10:15:30Z");
+    private static final UUID CUSTOMER_ID = UUID.randomUUID();
 
     @Test
     void shouldCreateResourceThroughFactory() {
@@ -22,7 +24,8 @@ class ResourceTest {
         Resource resource = ResourceFactory.makeResource(
                 code,
                 address,
-                instant
+                instant,
+                CUSTOMER_ID
         );
 
         assertThat(resource.getId()).isNull();
@@ -36,7 +39,8 @@ class ResourceTest {
         Resource resource = new Resource(
                 CODE,
                 ADDRESS,
-                CREATED_AT
+                CREATED_AT,
+                CUSTOMER_ID
         );
 
         assertThat(resource.getId()).isNull();
@@ -51,7 +55,8 @@ class ResourceTest {
                 ID,
                 CODE,
                 ADDRESS,
-                CREATED_AT
+                CREATED_AT,
+                CUSTOMER_ID
         );
 
         assertThat(url.getId()).isNotNull();
@@ -66,7 +71,8 @@ class ResourceTest {
                 null,
                 CODE,
                 ADDRESS,
-                CREATED_AT
+                CREATED_AT,
+                CUSTOMER_ID
         );
 
         assertThat(url.getId()).isNull();
@@ -78,7 +84,7 @@ class ResourceTest {
         String emptyCode = "";
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            ResourceFactory.makeResource(emptyCode, address, CREATED_AT);
+            ResourceFactory.makeResource(emptyCode, address, CREATED_AT, CUSTOMER_ID);
         });
 
         assertThat(exception.getMessage()).isEqualTo("Code value is null or blank");
@@ -90,7 +96,7 @@ class ResourceTest {
         String code = CODE.value();
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            ResourceFactory.makeResource(code, emptyAddress, CREATED_AT);
+            ResourceFactory.makeResource(code, emptyAddress, CREATED_AT, CUSTOMER_ID);
         });
 
         assertThat(exception.getMessage()).isEqualTo("Address value is null or blank");
@@ -102,7 +108,8 @@ class ResourceTest {
             new Resource(
                 CODE, 
                 ADDRESS, 
-                null
+                null,
+                CUSTOMER_ID
             );
         });
 
@@ -115,7 +122,8 @@ class ResourceTest {
             new Resource(
                 CODE,
                 null,
-                CREATED_AT
+                CREATED_AT,
+                CUSTOMER_ID
             );
         });
 
@@ -128,10 +136,25 @@ class ResourceTest {
             new Resource(
                 null,
                 ADDRESS,
-                CREATED_AT
+                CREATED_AT,
+                CUSTOMER_ID
             );
         });
 
         assertThat(exception.getMessage()).isEqualTo("Resource code is null");
+    }
+
+    @Test
+    void shouldFailWhenCustomerIdIsNull() {
+        NullPointerException exception = assertThrows(NullPointerException.class, () -> {
+            new Resource(
+                CODE,
+                ADDRESS,
+                CREATED_AT,
+                null
+            );
+        });
+
+        assertThat(exception.getMessage()).isEqualTo("Resource customerId is null");
     }
 }

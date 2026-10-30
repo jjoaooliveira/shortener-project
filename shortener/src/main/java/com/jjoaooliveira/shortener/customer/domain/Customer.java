@@ -16,7 +16,7 @@ public class Customer {
     private UUID id;
     private Name name;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private Email email;
 
     Customer() {}
@@ -29,6 +29,10 @@ public class Customer {
     Customer(UUID id, Name name, Email email) {
         this(name, email);
         this.id = Objects.requireNonNull(id);
+    }
+
+    public UUID getId() {
+        return id;
     }
 
     public String getName() {

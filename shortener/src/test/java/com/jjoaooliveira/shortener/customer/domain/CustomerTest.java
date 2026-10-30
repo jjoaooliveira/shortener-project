@@ -7,10 +7,6 @@ import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 
-import com.jjoaooliveira.shortener.customer.domain.Customer;
-import com.jjoaooliveira.shortener.customer.domain.Email;
-import com.jjoaooliveira.shortener.customer.domain.Name;
-
 class CustomerTest {
     private final Name name = new Name("Test Name");
     private final Email email = new Email("test@email.com");

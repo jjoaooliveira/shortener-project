@@ -2,6 +2,7 @@ package com.jjoaooliveira.shortener.resource.domain;
 
 import java.time.Instant;
 import java.util.Objects;
+import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,16 +25,20 @@ public class Resource {
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
+    @Column(nullable = false, updatable = false)
+    private UUID customerId;
+
     Resource() {}
 
-    Resource(Code code, Address address, Instant createdAt) {
+    Resource(Code code, Address address, Instant createdAt, UUID customerId) {
         this.code = Objects.requireNonNull(code, "Resource code is null");
         this.address = Objects.requireNonNull(address, "Resource address is null");
         this.createdAt = Objects.requireNonNull(createdAt, "Resource createdAt is null");
+        this.customerId = Objects.requireNonNull(customerId, "Resource customerId is null");
     }
 
-    Resource(Long id, Code code, Address address, Instant createdAt) {
-        this(code, address, createdAt);
+    Resource(Long id, Code code, Address address, Instant createdAt, UUID customerId) {
+        this(code, address, createdAt, customerId);
         this.id = id;
     }
 
@@ -51,5 +56,9 @@ public class Resource {
 
     public Instant getCreatedAt() {
         return createdAt;
+    }
+
+    public UUID getCustomerId() {
+        return customerId;
     }
 }
