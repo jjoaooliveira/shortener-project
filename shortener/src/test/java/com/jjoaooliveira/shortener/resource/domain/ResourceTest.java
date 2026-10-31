@@ -17,10 +17,12 @@ class ResourceTest {
 
     @Test
     void shouldCreateResourceThroughFactory() {
+        // Arrange
         String code = "Ab12Cd34";
         String address = "https://www.example.com/a/b?foo=bar&baz=123#section";
         Instant instant = Instant.now();
 
+        // Act
         Resource resource = ResourceFactory.makeResource(
                 code,
                 address,
@@ -28,6 +30,7 @@ class ResourceTest {
                 CUSTOMER_ID
         );
 
+        // Assert
         assertThat(resource.getId()).isNull();
         assertThat(resource.getCode()).isEqualTo(code);
         assertThat(resource.getAddress()).isEqualTo(address);
@@ -36,6 +39,8 @@ class ResourceTest {
 
     @Test
     void shouldCreateResourceWithoutId() {
+        // Arrange
+        // Act
         Resource resource = new Resource(
                 CODE,
                 ADDRESS,
@@ -43,6 +48,7 @@ class ResourceTest {
                 CUSTOMER_ID
         );
 
+        // Assert
         assertThat(resource.getId()).isNull();
         assertThat(resource.getCode()).isEqualTo(CODE.value());
         assertThat(resource.getAddress()).isEqualTo(ADDRESS.value());
@@ -51,7 +57,9 @@ class ResourceTest {
 
     @Test
     void shouldCreateResourceWithAllFields() {
-        Resource url = new Resource(
+        // Arrange
+        // Act
+        Resource resource = new Resource(
                 ID,
                 CODE,
                 ADDRESS,
@@ -59,15 +67,18 @@ class ResourceTest {
                 CUSTOMER_ID
         );
 
-        assertThat(url.getId()).isNotNull();
-        assertThat(url.getCode()).isEqualTo(CODE.value());
-        assertThat(url.getAddress()).isEqualTo(ADDRESS.value());
-        assertThat(url.getCreatedAt()).isEqualTo(CREATED_AT);
+        // Assert
+        assertThat(resource.getId()).isNotNull();
+        assertThat(resource.getCode()).isEqualTo(CODE.value());
+        assertThat(resource.getAddress()).isEqualTo(ADDRESS.value());
+        assertThat(resource.getCreatedAt()).isEqualTo(CREATED_AT);
     }
 
     @Test
     void shouldAcceptNullId() {
-        Resource url = new Resource(
+        // Arrange
+        // Act
+        Resource resource = new Resource(
                 null,
                 CODE,
                 ADDRESS,
@@ -75,86 +86,113 @@ class ResourceTest {
                 CUSTOMER_ID
         );
 
-        assertThat(url.getId()).isNull();
+        // Assert
+        assertThat(resource.getId()).isNull();
     }
 
     @Test
     void shouldFailOnEmptyCode() {
+        // Arrange
         String address = ADDRESS.value();
         String emptyCode = "";
 
+        // Act
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             ResourceFactory.makeResource(emptyCode, address, CREATED_AT, CUSTOMER_ID);
         });
 
+        // Assert
         assertThat(exception.getMessage()).isEqualTo("Code value is null or blank");
     }
     
     @Test
     void shouldFailOnEmptyAddress() {
+        // Arrange
         String emptyAddress = "";
         String code = CODE.value();
 
+        // Act
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             ResourceFactory.makeResource(code, emptyAddress, CREATED_AT, CUSTOMER_ID);
         });
 
+        // Assert
         assertThat(exception.getMessage()).isEqualTo("Address value is null or blank");
     }
 
     @Test
     void shouldFailWhenCreatedAtIsNull() {
+        // Arrange
+        Instant createdAt = null;
+
+        // Act
         NullPointerException exception = assertThrows(NullPointerException.class, () -> {
             new Resource(
                 CODE, 
                 ADDRESS, 
-                null,
+                createdAt,
                 CUSTOMER_ID
             );
         });
 
+        // Assert
         assertThat(exception.getMessage()).isEqualTo("Resource createdAt is null");
     }
 
     @Test
     void shouldFailWhenAddressIsNull() {
+        // Arrange
+        Address address = null;
+
+        // Act
         NullPointerException exception = assertThrows(NullPointerException.class, () -> {
             new Resource(
                 CODE,
-                null,
+                address,
                 CREATED_AT,
                 CUSTOMER_ID
             );
         });
 
+        // Assert
         assertThat(exception.getMessage()).isEqualTo("Resource address is null");
     }
 
     @Test
     void shouldFailWhenCodeIsNull() {
+        // Arrange
+        Code code = null;
+
+        // Act
         NullPointerException exception = assertThrows(NullPointerException.class, () -> {
             new Resource(
-                null,
+                code,
                 ADDRESS,
                 CREATED_AT,
                 CUSTOMER_ID
             );
         });
 
+        // Assert
         assertThat(exception.getMessage()).isEqualTo("Resource code is null");
     }
 
     @Test
     void shouldFailWhenCustomerIdIsNull() {
+        // Arrange
+        UUID customerId = null;
+
+        // Act
         NullPointerException exception = assertThrows(NullPointerException.class, () -> {
             new Resource(
                 CODE,
                 ADDRESS,
                 CREATED_AT,
-                null
+                customerId
             );
         });
 
+        // Assert
         assertThat(exception.getMessage()).isEqualTo("Resource customerId is null");
     }
 }
