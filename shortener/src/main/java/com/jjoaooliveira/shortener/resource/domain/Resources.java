@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public interface Resources {
     Resource save(Resource resource);
-    Optional<Resource> findByCode(String code);
-    boolean existsByCode(String code);
+    Optional<Resource> findByCodeAndCustomerId(String code, UUID customerId);
     List<Resource> findByCustomerId(UUID customerId);
+    int deleteByIdAndCustomerId(Long id, UUID customerId);
 }

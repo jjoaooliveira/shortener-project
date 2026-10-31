@@ -54,6 +54,10 @@ public class Resource {
         return address.value();
     }
 
+    public void updateAddress(String newAddress) {
+        this.address = Objects.requireNonNull(address, "New address is null");
+    }
+
     public Instant getCreatedAt() {
         return createdAt;
     }
