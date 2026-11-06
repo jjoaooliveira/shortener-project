@@ -3,7 +3,6 @@ package com.jjoaooliveira.shortener.resource.domain;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -13,7 +12,7 @@ class ResourceTest {
     private static final Code CODE = new Code("Ab12Cd34");
     private static final Address ADDRESS = new Address("https://www.example.com/a/b?foo=bar&baz=123#section");
     private static final Instant CREATED_AT = Instant.parse("2026-01-01T10:15:30Z");
-    private static final UUID CUSTOMER_ID = UUID.randomUUID();
+    private static final String CUSTOMER_ID = "customer-123";
 
     @Test
     void shouldCreateResourceThroughFactory() {
@@ -35,6 +34,7 @@ class ResourceTest {
         assertThat(resource.getCode()).isEqualTo(code);
         assertThat(resource.getAddress()).isEqualTo(address);
         assertThat(resource.getCreatedAt()).isEqualTo(instant);
+        assertThat(resource.getCustomerId()).isEqualTo(CUSTOMER_ID);
     }
 
     @Test
@@ -53,6 +53,7 @@ class ResourceTest {
         assertThat(resource.getCode()).isEqualTo(CODE.value());
         assertThat(resource.getAddress()).isEqualTo(ADDRESS.value());
         assertThat(resource.getCreatedAt()).isEqualTo(CREATED_AT);
+        assertThat(resource.getCustomerId()).isEqualTo(CUSTOMER_ID);
     }
 
     @Test
@@ -72,6 +73,7 @@ class ResourceTest {
         assertThat(resource.getCode()).isEqualTo(CODE.value());
         assertThat(resource.getAddress()).isEqualTo(ADDRESS.value());
         assertThat(resource.getCreatedAt()).isEqualTo(CREATED_AT);
+        assertThat(resource.getCustomerId()).isEqualTo(CUSTOMER_ID);
     }
 
     @Test
@@ -180,7 +182,7 @@ class ResourceTest {
     @Test
     void shouldFailWhenCustomerIdIsNull() {
         // Arrange
-        UUID customerId = null;
+        String customerId = null;
 
         // Act
         NullPointerException exception = assertThrows(NullPointerException.class, () -> {

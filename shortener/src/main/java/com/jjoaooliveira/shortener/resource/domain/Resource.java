@@ -2,9 +2,11 @@ package com.jjoaooliveira.shortener.resource.domain;
 
 import java.time.Instant;
 import java.util.Objects;
-import java.util.UUID;
+
+import org.hibernate.annotations.EmbeddedColumnNaming;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,9 +18,13 @@ public class Resource {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Embedded
+    @EmbeddedColumnNaming("code")
     @Column(nullable = false, unique = true, length = 8)
     private Code code;
 
+    @Embedded
+    @EmbeddedColumnNaming("address")
     @Column(nullable = false)
     private Address address;
 
@@ -26,18 +32,18 @@ public class Resource {
     private Instant createdAt;
 
     @Column(nullable = false, updatable = false)
-    private UUID customerId;
+    private String customerId;
 
     Resource() {}
 
-    Resource(Code code, Address address, Instant createdAt, UUID customerId) {
+    Resource(Code code, Address address, Instant createdAt, String customerId) {
         this.code = Objects.requireNonNull(code, "Resource code is null");
         this.address = Objects.requireNonNull(address, "Resource address is null");
         this.createdAt = Objects.requireNonNull(createdAt, "Resource createdAt is null");
         this.customerId = Objects.requireNonNull(customerId, "Resource customerId is null");
     }
 
-    Resource(Long id, Code code, Address address, Instant createdAt, UUID customerId) {
+    Resource(Long id, Code code, Address address, Instant createdAt, String customerId) {
         this(code, address, createdAt, customerId);
         this.id = id;
     }
@@ -62,7 +68,7 @@ public class Resource {
         return createdAt;
     }
 
-    public UUID getCustomerId() {
+    public String getCustomerId() {
         return customerId;
     }
 }

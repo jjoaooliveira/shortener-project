@@ -1,8 +1,8 @@
-package com.jjoaooliveira.shortener.resource.usecase;
-
-import java.util.UUID;
+package com.jjoaooliveira.shortener.resource.usecase.user;
 
 import com.jjoaooliveira.shortener.resource.domain.Resources;
+import com.jjoaooliveira.shortener.resource.usecase.ResourceNotFoundException;
+import com.jjoaooliveira.shortener.resource.usecase.ResourceUseCase;
 
 import jakarta.transaction.Transactional;
 
@@ -13,9 +13,9 @@ public class DeleteResource extends ResourceUseCase {
     }
     
     @Transactional
-    void delete(ResourceRequest request) {
-        Long resourceId = request.resource().id();
-        UUID customerId = request.customerId();
+    void delete(DeleteResourceRequest request) {
+        Long resourceId = request.id();
+        String customerId = request.customerId();
         int deletedRows = resources.deleteByIdAndCustomerId(resourceId, customerId);
 
         if (deletedRows == 0) {

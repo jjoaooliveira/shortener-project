@@ -1,9 +1,11 @@
-package com.jjoaooliveira.shortener.resource.usecase;
+package com.jjoaooliveira.shortener.resource.usecase.user;
 
 import java.util.List;
 
 import com.jjoaooliveira.shortener.resource.domain.Resource;
 import com.jjoaooliveira.shortener.resource.domain.Resources;
+import com.jjoaooliveira.shortener.resource.usecase.ResourceDTO;
+import com.jjoaooliveira.shortener.resource.usecase.ResourceUseCase;
 
 public class GetAllResources extends ResourceUseCase {
 
@@ -11,8 +13,9 @@ public class GetAllResources extends ResourceUseCase {
         super(resources);
     }
     
-    List<ResourceDTO> get(ResourceRequest request) {
-        List<Resource> resourceList = resources.findByCustomerId(request.customerId());
+    public List<ResourceDTO> get(GetAllResourcesRequest request) {
+        String customerId = request.customerId();
+        List<Resource> resourceList = resources.findByCustomerId(customerId);
         List<ResourceDTO> resourceDTOs = resourceList.stream()
             .map(ResourceDTO::fromResource)
             .toList();

@@ -1,9 +1,9 @@
-package com.jjoaooliveira.shortener.resource.usecase;
-
-import java.util.UUID;
+package com.jjoaooliveira.shortener.resource.usecase.user;
 
 import com.jjoaooliveira.shortener.resource.domain.Resource;
 import com.jjoaooliveira.shortener.resource.domain.Resources;
+import com.jjoaooliveira.shortener.resource.usecase.ResourceDTO;
+import com.jjoaooliveira.shortener.resource.usecase.ResourceUseCase;
 
 import jakarta.transaction.Transactional;
 
@@ -14,16 +14,15 @@ public class UpdateResourceAddress extends ResourceUseCase {
     }
 
     @Transactional
-    ResourceDTO update(ResourceRequest request) {
-        ResourceDTO resourceDTO = request.resource();
-        String code = resourceDTO.code();
-        UUID customerId = request.customerId();
+    ResourceDTO update(UpdateResourceRequest request) {
+        String code = request.code();
+        String customerId = request.customerId();
 
         Resource resourceToUpdate = resources
             .findByCodeAndCustomerId(code, customerId)
             .orElseThrow(RuntimeException::new);
         
-        resourceToUpdate.updateAddress(resourceDTO.address());
+        resourceToUpdate.updateAddress(request.address());
 
         return ResourceDTO.fromResource(resourceToUpdate);
     }
