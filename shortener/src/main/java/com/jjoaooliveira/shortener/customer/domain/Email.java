@@ -2,6 +2,9 @@ package com.jjoaooliveira.shortener.customer.domain;
 
 import java.util.Objects;
 
+import jakarta.persistence.Embeddable;
+
+@Embeddable
 record Email(String value) {
     Email {
         if (Objects.isNull(value) || value.isBlank()) {

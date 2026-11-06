@@ -4,6 +4,5 @@ import java.util.Optional;
 
 public interface Customers {
     Customer save(Customer customer);
-    Optional<Customer> findCustomerById(String id);
-    Optional<Customer> findCustomerByEmail(String email);
+    Optional<Customer> findByUsername(String username);
 }

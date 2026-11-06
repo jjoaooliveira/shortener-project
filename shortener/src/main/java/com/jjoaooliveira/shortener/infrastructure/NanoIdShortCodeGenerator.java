@@ -5,7 +5,7 @@ import java.security.SecureRandom;
 import org.springframework.stereotype.Component;
 
 import com.aventrix.jnanoid.jnanoid.NanoIdUtils;
-import com.jjoaooliveira.shortener.resource.usecases.ShortCodeGenerator;
+import com.jjoaooliveira.shortener.resource.usecase.ShortCodeGenerator;
 
 @Component  
 class NanoIdShortCodeGenerator implements ShortCodeGenerator {

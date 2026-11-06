@@ -3,66 +3,59 @@ package com.jjoaooliveira.shortener.customer.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.util.UUID;
-
 import org.junit.jupiter.api.Test;
 
 class CustomerTest {
-    private final Name name = new Name("Test Name");
-    private final Email email = new Email("test@email.com");
+    private static final String USERNAME = "test-user";
+    private static final String NAME = "Test Name";
+    private static final String EMAIL = "test@email.com";
 
     @Test
-    void shouldCreateCustomerWithNameAndEmail() {
-        // Arrange & Act
-        Customer customer = new Customer(name, email);
+    void shouldCreateCustomerThroughFactory() {
+        Customer customer = CustomerFactory.create(USERNAME, EMAIL, NAME);
 
-        // Assert
-        assertThat(customer.getName()).isEqualTo("Test Name");
-        assertThat(customer.getEmail()).isEqualTo("test@email.com");
+        assertThat(customer.getUsername()).isEqualTo(USERNAME);
+        assertThat(customer.getName()).isEqualTo(NAME);
+        assertThat(customer.getEmail()).isEqualTo(EMAIL);
     }
 
     @Test
-    void shouldCreateCustomerWithIdNameAndEmail() {
-        // Arrange
-        UUID id = UUID.randomUUID();
+    void shouldUpdateCustomerName() {
+        Customer customer = CustomerFactory.create(USERNAME, EMAIL, NAME);
 
-        // Act
-        Customer customer = new Customer(id, name, email);
+        customer.updateName("Updated Name");
 
-        // Assert
-        assertThat(customer.getName()).isEqualTo("Test Name");
-        assertThat(customer.getEmail()).isEqualTo("test@email.com");
+        assertThat(customer.getName()).isEqualTo("Updated Name");
     }
 
     @Test
-    void shouldThrowExceptionWhenNameIsNull() {
+    void shouldThrowExceptionWhenUsernameIsNull() {
         assertThrows(
             NullPointerException.class,
-            () -> new Customer(null, email)
+            () -> CustomerFactory.create(null, EMAIL, NAME)
         );
     }
 
     @Test
-    void shouldThrowExceptionWhenEmailIsNull() {
+    void shouldThrowExceptionWhenNameIsBlank() {
         assertThrows(
-            NullPointerException.class,
-            () -> new Customer(name, null)
+            IllegalArgumentException.class,
+            () -> CustomerFactory.create(USERNAME, EMAIL, " ")
         );
     }
 
     @Test
-    void shouldThrowExceptionWhenIdIsNull() {
+    void shouldThrowExceptionWhenEmailIsBlank() {
         assertThrows(
-            NullPointerException.class,
-            () -> new Customer(null, name, email)
+            IllegalArgumentException.class,
+            () -> CustomerFactory.create(USERNAME, " ", NAME)
         );
     }
 
     @Test
-    void shouldThrowExceptionWhenNameAndEmailAreNull() {
-        assertThrows(
-            NullPointerException.class,
-            () -> new Customer(null, null)
-        );
+    void shouldThrowExceptionWhenUpdatedNameIsBlank() {
+        Customer customer = CustomerFactory.create(USERNAME, EMAIL, NAME);
+
+        assertThrows(IllegalArgumentException.class, () -> customer.updateName(" "));
     }
 }

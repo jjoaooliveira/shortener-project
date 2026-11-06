@@ -1,42 +1,48 @@
 package com.jjoaooliveira.shortener.customer.domain;
 
 import java.util.Objects;
-import java.util.UUID;
+
+import org.hibernate.annotations.EmbeddedColumnNaming;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
 public class Customer {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @Column(updatable = false, nullable = false)
+    private String username;
+
+    @Embedded
+    @EmbeddedColumnNaming("name")
+    @Column(nullable = false, length = 255)
     private Name name;
 
-    @Column(unique = true, nullable = false)
+    @Embedded
+    @EmbeddedColumnNaming("email")
+    @Column(nullable = false, unique = true, length = 255)
     private Email email;
 
     Customer() {}
-    
-    Customer(Name name, Email email) {
+
+    Customer(String username, Name name, Email email) {
+        this.username = Objects.requireNonNull(username);
         this.name = Objects.requireNonNull(name);
         this.email = Objects.requireNonNull(email);
     }
 
-    Customer(UUID id, Name name, Email email) {
-        this(name, email);
-        this.id = Objects.requireNonNull(id);
-    }
-
-    public UUID getId() {
-        return id;
+    public String getUsername() {
+        return username;
     }
 
     public String getName() {
         return name.value();
+    }
+
+    public void updateName(String newName) {
+        this.name = new Name(newName);
     }
 
     public String getEmail() {
