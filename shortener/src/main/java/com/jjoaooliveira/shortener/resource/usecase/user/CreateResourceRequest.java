@@ -1,5 +1,5 @@
 package com.jjoaooliveira.shortener.resource.usecase.user;
 
-public record CreateResourceRequest(String address, String customerId) {
+public record CreateResourceRequest(String address) {
 
 }

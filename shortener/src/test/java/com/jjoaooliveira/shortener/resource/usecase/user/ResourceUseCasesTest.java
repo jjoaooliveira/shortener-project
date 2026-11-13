@@ -45,7 +45,7 @@ class ResourceUseCasesTest {
         CreateResource useCase = new CreateResource(resources, shortCodeGenerator);
 
         // Act
-        ResourceDTO result = useCase.create(new CreateResourceRequest(ADDRESS, CUSTOMER_ID));
+        ResourceDTO result = useCase.create(new CreateResourceRequest(ADDRESS), CUSTOMER_ID);
 
         // Assert
         ArgumentCaptor<Resource> resourceCaptor = ArgumentCaptor.forClass(Resource.class);
@@ -64,7 +64,7 @@ class ResourceUseCasesTest {
         DeleteResource useCase = new DeleteResource(resources);
 
         // Act
-        useCase.delete(new DeleteResourceRequest(42L, CUSTOMER_ID));
+        useCase.delete(new DeleteResourceRequest(42L), CUSTOMER_ID);
 
         // Assert
         verify(resources).deleteByIdAndCustomerId(42L, CUSTOMER_ID);
@@ -79,7 +79,7 @@ class ResourceUseCasesTest {
         // Act
         assertThrows(
             ResourceNotFoundException.class,
-            () -> useCase.delete(new DeleteResourceRequest(42L, CUSTOMER_ID))
+            () -> useCase.delete(new DeleteResourceRequest(42L), CUSTOMER_ID)
         );
 
         // Assert
@@ -97,7 +97,7 @@ class ResourceUseCasesTest {
         GetAllResources useCase = new GetAllResources(resources);
 
         // Act
-        List<ResourceDTO> result = useCase.get(new GetAllResourcesRequest(CUSTOMER_ID));
+        List<ResourceDTO> result = useCase.get(CUSTOMER_ID);
 
         // Assert
         verify(resources).findByCustomerId(CUSTOMER_ID);
@@ -116,7 +116,7 @@ class ResourceUseCasesTest {
         String updatedAddress = "https://example.com/updated";
 
         // Act
-        ResourceDTO result = useCase.update(new UpdateResourceRequest(CODE, updatedAddress, CUSTOMER_ID));
+        ResourceDTO result = useCase.update(new UpdateResourceRequest(CODE, updatedAddress), CUSTOMER_ID);
 
         // Assert
         verify(resources).findByCodeAndCustomerId(CODE, CUSTOMER_ID);
@@ -132,7 +132,7 @@ class ResourceUseCasesTest {
         // Act
         assertThrows(
             RuntimeException.class,
-            () -> useCase.update(new UpdateResourceRequest(CODE, ADDRESS, CUSTOMER_ID))
+            () -> useCase.update(new UpdateResourceRequest(CODE, ADDRESS), CUSTOMER_ID)
         );
 
         // Assert

@@ -1,5 +1,5 @@
 package com.jjoaooliveira.shortener.resource.usecase.user;
 
-public record DeleteResourceRequest(Long id, String customerId) {
+public record DeleteResourceRequest(Long id) {
 
 }

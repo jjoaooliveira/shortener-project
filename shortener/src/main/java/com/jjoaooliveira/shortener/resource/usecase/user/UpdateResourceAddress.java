@@ -1,5 +1,7 @@
 package com.jjoaooliveira.shortener.resource.usecase.user;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+
 import com.jjoaooliveira.shortener.resource.domain.Resource;
 import com.jjoaooliveira.shortener.resource.domain.Resources;
 import com.jjoaooliveira.shortener.resource.usecase.ResourceDTO;
@@ -13,11 +15,11 @@ public class UpdateResourceAddress extends ResourceUseCase {
         super(resources);
     }
 
+    @PreAuthorize("hasAuthority('resource:update')")
     @Transactional
-    ResourceDTO update(UpdateResourceRequest request) {
+    ResourceDTO update(UpdateResourceRequest request, String customerId) {
         String code = request.code();
-        String customerId = request.customerId();
-
+        
         Resource resourceToUpdate = resources
             .findByCodeAndCustomerId(code, customerId)
             .orElseThrow(RuntimeException::new);

@@ -1,5 +1,7 @@
 package com.jjoaooliveira.shortener.resource.usecase.user;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+
 import com.jjoaooliveira.shortener.resource.domain.Resources;
 import com.jjoaooliveira.shortener.resource.usecase.ResourceNotFoundException;
 import com.jjoaooliveira.shortener.resource.usecase.ResourceUseCase;
@@ -12,10 +14,10 @@ public class DeleteResource extends ResourceUseCase {
         super(resources);
     }
     
+    @PreAuthorize("hasAuthority('resource:delete')")
     @Transactional
-    void delete(DeleteResourceRequest request) {
+    void delete(DeleteResourceRequest request, String customerId) {
         Long resourceId = request.id();
-        String customerId = request.customerId();
         int deletedRows = resources.deleteByIdAndCustomerId(resourceId, customerId);
 
         if (deletedRows == 0) {
