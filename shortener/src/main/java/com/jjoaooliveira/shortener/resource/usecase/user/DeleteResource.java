@@ -16,9 +16,9 @@ public class DeleteResource extends ResourceUseCase {
     
     @PreAuthorize("hasAuthority('resource:delete')")
     @Transactional
-    void delete(DeleteResourceRequest request, String customerId) {
+    void delete(DeleteResourceRequest request, String username) {
         Long resourceId = request.id();
-        int deletedRows = resources.deleteByIdAndCustomerId(resourceId, customerId);
+        int deletedRows = resources.deleteByIdAndUsername(resourceId, username);
 
         if (deletedRows == 0) {
             throw new ResourceNotFoundException();

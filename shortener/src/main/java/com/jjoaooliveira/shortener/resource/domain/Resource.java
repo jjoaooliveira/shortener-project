@@ -32,19 +32,19 @@ public class Resource {
     private Instant createdAt;
 
     @Column(nullable = false, updatable = false)
-    private String customerId;
+    private String username;
 
     Resource() {}
 
-    Resource(Code code, Address address, Instant createdAt, String customerId) {
+    Resource(Code code, Address address, Instant createdAt, String username) {
         this.code = Objects.requireNonNull(code, "Resource code is null");
         this.address = Objects.requireNonNull(address, "Resource address is null");
         this.createdAt = Objects.requireNonNull(createdAt, "Resource createdAt is null");
-        this.customerId = Objects.requireNonNull(customerId, "Resource customerId is null");
+        this.username = Objects.requireNonNull(username, "Resource username is null");
     }
 
-    Resource(Long id, Code code, Address address, Instant createdAt, String customerId) {
-        this(code, address, createdAt, customerId);
+    Resource(Long id, Code code, Address address, Instant createdAt, String username) {
+        this(code, address, createdAt, username);
         this.id = id;
     }
 
@@ -68,7 +68,7 @@ public class Resource {
         return createdAt;
     }
 
-    public String getCustomerId() {
-        return customerId;
+    public String getUsername() {
+        return username;
     }
 }

@@ -20,11 +20,11 @@ public class CreateResource extends ResourceUseCase {
     }
 
     @PreAuthorize("hasAuthority('resource:create')")
-    public ResourceDTO create(CreateResourceRequest request, String customerId) {
+    public ResourceDTO create(CreateResourceRequest request, String username) {
         Instant createdAt = Instant.now();
         String code = shortCodeGenerator.generate();
         String address = request.address();
-        Resource newResource = ResourceFactory.makeResource(code, address, createdAt, customerId);
+        Resource newResource = ResourceFactory.makeResource(code, address, createdAt, username);
         Resource savedResource = resources.save(newResource);
         ResourceDTO response = ResourceDTO.fromResource(savedResource);
         

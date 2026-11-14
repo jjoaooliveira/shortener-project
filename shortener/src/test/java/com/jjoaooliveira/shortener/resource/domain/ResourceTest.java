@@ -12,7 +12,7 @@ class ResourceTest {
     private static final Code CODE = new Code("Ab12Cd34");
     private static final Address ADDRESS = new Address("https://www.example.com/a/b?foo=bar&baz=123#section");
     private static final Instant CREATED_AT = Instant.parse("2026-01-01T10:15:30Z");
-    private static final String CUSTOMER_ID = "customer-123";
+    private static final String USERNAME = "customer-123";
 
     @Test
     void shouldCreateResourceThroughFactory() {
@@ -26,7 +26,7 @@ class ResourceTest {
                 code,
                 address,
                 instant,
-                CUSTOMER_ID
+                USERNAME
         );
 
         // Assert
@@ -34,7 +34,7 @@ class ResourceTest {
         assertThat(resource.getCode()).isEqualTo(code);
         assertThat(resource.getAddress()).isEqualTo(address);
         assertThat(resource.getCreatedAt()).isEqualTo(instant);
-        assertThat(resource.getCustomerId()).isEqualTo(CUSTOMER_ID);
+        assertThat(resource.getUsername()).isEqualTo(USERNAME);
     }
 
     @Test
@@ -45,7 +45,7 @@ class ResourceTest {
                 CODE,
                 ADDRESS,
                 CREATED_AT,
-                CUSTOMER_ID
+                USERNAME
         );
 
         // Assert
@@ -53,7 +53,7 @@ class ResourceTest {
         assertThat(resource.getCode()).isEqualTo(CODE.value());
         assertThat(resource.getAddress()).isEqualTo(ADDRESS.value());
         assertThat(resource.getCreatedAt()).isEqualTo(CREATED_AT);
-        assertThat(resource.getCustomerId()).isEqualTo(CUSTOMER_ID);
+        assertThat(resource.getUsername()).isEqualTo(USERNAME);
     }
 
     @Test
@@ -65,7 +65,7 @@ class ResourceTest {
                 CODE,
                 ADDRESS,
                 CREATED_AT,
-                CUSTOMER_ID
+                USERNAME
         );
 
         // Assert
@@ -73,7 +73,7 @@ class ResourceTest {
         assertThat(resource.getCode()).isEqualTo(CODE.value());
         assertThat(resource.getAddress()).isEqualTo(ADDRESS.value());
         assertThat(resource.getCreatedAt()).isEqualTo(CREATED_AT);
-        assertThat(resource.getCustomerId()).isEqualTo(CUSTOMER_ID);
+        assertThat(resource.getUsername()).isEqualTo(USERNAME);
     }
 
     @Test
@@ -85,7 +85,7 @@ class ResourceTest {
                 CODE,
                 ADDRESS,
                 CREATED_AT,
-                CUSTOMER_ID
+                USERNAME
         );
 
         // Assert
@@ -100,7 +100,7 @@ class ResourceTest {
 
         // Act
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            ResourceFactory.makeResource(emptyCode, address, CREATED_AT, CUSTOMER_ID);
+            ResourceFactory.makeResource(emptyCode, address, CREATED_AT, USERNAME);
         });
 
         // Assert
@@ -115,7 +115,7 @@ class ResourceTest {
 
         // Act
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            ResourceFactory.makeResource(code, emptyAddress, CREATED_AT, CUSTOMER_ID);
+            ResourceFactory.makeResource(code, emptyAddress, CREATED_AT, USERNAME);
         });
 
         // Assert
@@ -133,7 +133,7 @@ class ResourceTest {
                 CODE, 
                 ADDRESS, 
                 createdAt,
-                CUSTOMER_ID
+                USERNAME
             );
         });
 
@@ -152,7 +152,7 @@ class ResourceTest {
                 CODE,
                 address,
                 CREATED_AT,
-                CUSTOMER_ID
+                USERNAME
             );
         });
 
@@ -171,7 +171,7 @@ class ResourceTest {
                 code,
                 ADDRESS,
                 CREATED_AT,
-                CUSTOMER_ID
+                USERNAME
             );
         });
 

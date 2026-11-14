@@ -9,15 +9,16 @@ import com.jjoaooliveira.shortener.resource.domain.Resources;
 import com.jjoaooliveira.shortener.resource.usecase.ResourceDTO;
 import com.jjoaooliveira.shortener.resource.usecase.ResourceUseCase;
 
-public class GetAllResources extends ResourceUseCase {
+public class GetAllResourcesByUsername extends ResourceUseCase {
 
-    public GetAllResources(Resources resources) {
+    public GetAllResourcesByUsername(Resources resources) {
         super(resources);
     }
     
     @PreAuthorize("hasAuthority('resource:read')")
-    public List<ResourceDTO> get(String customerId) {
-        List<Resource> resourceList = resources.findByCustomerId(customerId);
+    public List<ResourceDTO> get(String username) {
+        List<Resource> resourceList = resources.findByUsername(username);
+        
         List<ResourceDTO> resourceDTOs = resourceList.stream()
             .map(ResourceDTO::fromResource)
             .toList();

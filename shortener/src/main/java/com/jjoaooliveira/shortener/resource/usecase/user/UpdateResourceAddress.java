@@ -17,11 +17,11 @@ public class UpdateResourceAddress extends ResourceUseCase {
 
     @PreAuthorize("hasAuthority('resource:update')")
     @Transactional
-    ResourceDTO update(UpdateResourceRequest request, String customerId) {
+    ResourceDTO update(UpdateResourceRequest request, String username) {
         String code = request.code();
         
         Resource resourceToUpdate = resources
-            .findByCodeAndCustomerId(code, customerId)
+            .findByCodeAndUsername(code, username)
             .orElseThrow(RuntimeException::new);
         
         resourceToUpdate.updateAddress(request.address());

@@ -25,7 +25,7 @@ import com.jjoaooliveira.shortener.resource.usecase.ShortCodeGenerator;
 
 @ExtendWith(MockitoExtension.class)
 class ResourceUseCasesTest {
-    private static final String CUSTOMER_ID = "customer-123";
+    private static final String USERNAME = "customer-123";
     private static final Instant TIMESTAMP = Instant.parse("2026-01-01T10:15:30Z");
     private static final String CODE = "Ab12Cd34";
     private static final String ADDRESS = "https://example.com/resource";
@@ -39,13 +39,13 @@ class ResourceUseCasesTest {
     @Test
     void shouldCreateResourceFromRequestAndReturnSavedResource() {
         // Arrange
-        Resource savedResource = ResourceFactory.makeResource(CODE, ADDRESS, TIMESTAMP, CUSTOMER_ID);
+        Resource savedResource = ResourceFactory.makeResource(CODE, ADDRESS, TIMESTAMP, USERNAME);
         when(resources.save(any(Resource.class))).thenReturn(savedResource);
         when(shortCodeGenerator.generate()).thenReturn(CODE);
         CreateResource useCase = new CreateResource(resources, shortCodeGenerator);
 
         // Act
-        ResourceDTO result = useCase.create(new CreateResourceRequest(ADDRESS), CUSTOMER_ID);
+        ResourceDTO result = useCase.create(new CreateResourceRequest(ADDRESS), USERNAME);
 
         // Assert
         ArgumentCaptor<Resource> resourceCaptor = ArgumentCaptor.forClass(Resource.class);
@@ -53,54 +53,54 @@ class ResourceUseCasesTest {
         assertThat(resourceCaptor.getValue().getCode()).isEqualTo(CODE);
         assertThat(resourceCaptor.getValue().getAddress()).isEqualTo(ADDRESS);
         assertThat(resourceCaptor.getValue().getCreatedAt()).isNotNull();
-        assertThat(resourceCaptor.getValue().getCustomerId()).isEqualTo(CUSTOMER_ID);
+        assertThat(resourceCaptor.getValue().getUsername()).isEqualTo(USERNAME);
         assertThat(result).isEqualTo(new ResourceDTO(null, CODE, ADDRESS, TIMESTAMP));
     }
 
     @Test
     void shouldDeleteResourceForCustomer() {
         // Arrange
-        when(resources.deleteByIdAndCustomerId(42L, CUSTOMER_ID)).thenReturn(1);
+        when(resources.deleteByIdAndUsername(42L, USERNAME)).thenReturn(1);
         DeleteResource useCase = new DeleteResource(resources);
 
         // Act
-        useCase.delete(new DeleteResourceRequest(42L), CUSTOMER_ID);
+        useCase.delete(new DeleteResourceRequest(42L), USERNAME);
 
         // Assert
-        verify(resources).deleteByIdAndCustomerId(42L, CUSTOMER_ID);
+        verify(resources).deleteByIdAndUsername(42L, USERNAME);
     }
 
     @Test
     void shouldThrowWhenResourceCannotBeDeleted() {
         // Arrange
-        when(resources.deleteByIdAndCustomerId(42L, CUSTOMER_ID)).thenReturn(0);
+        when(resources.deleteByIdAndUsername(42L, USERNAME)).thenReturn(0);
         DeleteResource useCase = new DeleteResource(resources);
 
         // Act
         assertThrows(
             ResourceNotFoundException.class,
-            () -> useCase.delete(new DeleteResourceRequest(42L), CUSTOMER_ID)
+            () -> useCase.delete(new DeleteResourceRequest(42L), USERNAME)
         );
 
         // Assert
-        verify(resources).deleteByIdAndCustomerId(42L, CUSTOMER_ID);
+        verify(resources).deleteByIdAndUsername(42L, USERNAME);
     }
 
     @Test
     void shouldReturnAllResourcesForCustomerAsDtos() {
         // Arrange
         List<Resource> customerResources = List.of(
-            ResourceFactory.makeResource(CODE, ADDRESS, TIMESTAMP, CUSTOMER_ID),
-            ResourceFactory.makeResource("Cd34Ef56", "https://example.com/other", TIMESTAMP, CUSTOMER_ID)
+            ResourceFactory.makeResource(CODE, ADDRESS, TIMESTAMP, USERNAME),
+            ResourceFactory.makeResource("Cd34Ef56", "https://example.com/other", TIMESTAMP, USERNAME)
         );
-        when(resources.findByCustomerId(CUSTOMER_ID)).thenReturn(customerResources);
-        GetAllResources useCase = new GetAllResources(resources);
+        when(resources.findByUsername(USERNAME)).thenReturn(customerResources);
+        GetAllResourcesByUsername useCase = new GetAllResourcesByUsername(resources);
 
         // Act
-        List<ResourceDTO> result = useCase.get(CUSTOMER_ID);
+        List<ResourceDTO> result = useCase.get(USERNAME);
 
         // Assert
-        verify(resources).findByCustomerId(CUSTOMER_ID);
+        verify(resources).findByUsername(USERNAME);
         assertThat(result).containsExactly(
             new ResourceDTO(null, CODE, ADDRESS, TIMESTAMP),
             new ResourceDTO(null, "Cd34Ef56", "https://example.com/other", TIMESTAMP)
@@ -110,32 +110,32 @@ class ResourceUseCasesTest {
     @Test
     void shouldUpdateResourceAddress() {
         // Arrange
-        Resource resource = ResourceFactory.makeResource(CODE, ADDRESS, TIMESTAMP, CUSTOMER_ID);
-        when(resources.findByCodeAndCustomerId(CODE, CUSTOMER_ID)).thenReturn(Optional.of(resource));
+        Resource resource = ResourceFactory.makeResource(CODE, ADDRESS, TIMESTAMP, USERNAME);
+        when(resources.findByCodeAndUsername(CODE, USERNAME)).thenReturn(Optional.of(resource));
         UpdateResourceAddress useCase = new UpdateResourceAddress(resources);
         String updatedAddress = "https://example.com/updated";
 
         // Act
-        ResourceDTO result = useCase.update(new UpdateResourceRequest(CODE, updatedAddress), CUSTOMER_ID);
+        ResourceDTO result = useCase.update(new UpdateResourceRequest(CODE, updatedAddress), USERNAME);
 
         // Assert
-        verify(resources).findByCodeAndCustomerId(CODE, CUSTOMER_ID);
+        verify(resources).findByCodeAndUsername(CODE, USERNAME);
         assertThat(result).isEqualTo(new ResourceDTO(null, CODE, updatedAddress, TIMESTAMP));
     }
 
     @Test
     void shouldThrowWhenResourceToUpdateDoesNotExist() {
         // Arrange
-        when(resources.findByCodeAndCustomerId(CODE, CUSTOMER_ID)).thenReturn(Optional.empty());
+        when(resources.findByCodeAndUsername(CODE, USERNAME)).thenReturn(Optional.empty());
         UpdateResourceAddress useCase = new UpdateResourceAddress(resources);
 
         // Act
         assertThrows(
             RuntimeException.class,
-            () -> useCase.update(new UpdateResourceRequest(CODE, ADDRESS), CUSTOMER_ID)
+            () -> useCase.update(new UpdateResourceRequest(CODE, ADDRESS), USERNAME)
         );
 
         // Assert
-        verify(resources).findByCodeAndCustomerId(CODE, CUSTOMER_ID);
+        verify(resources).findByCodeAndUsername(CODE, USERNAME);
     }
 }
