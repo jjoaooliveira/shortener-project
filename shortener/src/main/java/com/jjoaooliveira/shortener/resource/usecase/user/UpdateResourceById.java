@@ -18,9 +18,7 @@ public class UpdateResourceById extends ResourceUseCase {
 
     @PreAuthorize("hasAuthority('resource:update')")
     @Transactional
-    public ResourceDTO update(final UpdateResourceRequest request, final String username) {
-        final Long id = request.id();
-        
+    public ResourceDTO update(final Long id, final UpdateResourceRequest request, final String username) {
         Resource resourceToUpdate = resources
             .findByIdAndUsername(id, username)
             .orElseThrow(ResourceNotFoundException::new);

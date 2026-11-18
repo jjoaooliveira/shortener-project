@@ -60,8 +60,8 @@ class ResourceRestController {
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('ROLE_USER')")
-    public PagedModel<EntityModel<ResourceDTO>> getResourceList( 
+    @PreAuthorize("hasRole('USER')")
+    public PagedModel<EntityModel<ResourceDTO>> getAllResources( 
         @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.ASC) Pageable pageable,
         Authentication authentication
     ) {
@@ -70,7 +70,7 @@ class ResourceRestController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('USER')")
     public EntityModel<ResourceDTO> getResourceById(
         @PathVariable Long id, 
         Authentication authentication
@@ -82,7 +82,7 @@ class ResourceRestController {
     }
     
     @PostMapping
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('USER')")
     public EntityModel<ResourceDTO> createResource(
         @RequestBody CreateResourceRequest request, 
         Authentication authentication
@@ -93,17 +93,18 @@ class ResourceRestController {
     
 
     @PatchMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('USER')")
     public EntityModel<ResourceDTO> updateResource(
+        @PathVariable Long id,
         @RequestBody UpdateResourceRequest request, 
         Authentication authentication
-    ) { 
-        var response = updateResourceAddress.update(request, authentication.getName());
+    ) {   
+        var response = updateResourceAddress.update(id, request, authentication.getName());
         return resourceModelAssembler.toModel(response);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<String> deleteResource(
         @PathVariable Long id, 
         Authentication authentication

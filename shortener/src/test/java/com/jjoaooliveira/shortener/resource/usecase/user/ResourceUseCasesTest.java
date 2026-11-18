@@ -126,7 +126,7 @@ class ResourceUseCasesTest {
         String updatedAddress = "https://example.com/updated";
 
         // Act
-        ResourceDTO result = useCase.update(new UpdateResourceRequest(RESOURCE_ID, updatedAddress), USERNAME);
+        ResourceDTO result = useCase.update(RESOURCE_ID, new UpdateResourceRequest(updatedAddress), USERNAME);
 
         // Assert
         verify(resources).findByIdAndUsername(RESOURCE_ID, USERNAME);
@@ -142,7 +142,7 @@ class ResourceUseCasesTest {
         // Act
         assertThrows(
             ResourceNotFoundException.class,
-            () -> useCase.update(new UpdateResourceRequest(RESOURCE_ID, ADDRESS), USERNAME)
+            () -> useCase.update(RESOURCE_ID, new UpdateResourceRequest(ADDRESS), USERNAME)
         );
 
         // Assert

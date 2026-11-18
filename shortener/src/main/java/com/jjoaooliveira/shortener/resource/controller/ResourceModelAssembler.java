@@ -21,7 +21,7 @@ public class ResourceModelAssembler implements RepresentationModelAssembler<Reso
                 .getResourceById(entity.id(), null)
             ).withSelfRel()
             .andAffordance(afford(methodOn(ResourceRestController.class)
-                .updateResource(null, null))
+                .updateResource(entity.id(), null, null))
             )
         );
     }
