@@ -15,6 +15,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import com.jjoaooliveira.shortener.resource.domain.Resource;
 import com.jjoaooliveira.shortener.resource.domain.ResourceFactory;
@@ -25,6 +29,7 @@ import com.jjoaooliveira.shortener.resource.usecase.ShortCodeGenerator;
 
 @ExtendWith(MockitoExtension.class)
 class ResourceUseCasesTest {
+    private static final Long RESOURCE_ID = 1L;
     private static final String USERNAME = "customer-123";
     private static final Instant TIMESTAMP = Instant.parse("2026-01-01T10:15:30Z");
     private static final String CODE = "Ab12Cd34";
@@ -61,7 +66,7 @@ class ResourceUseCasesTest {
     void shouldDeleteResourceForCustomer() {
         // Arrange
         when(resources.deleteByIdAndUsername(42L, USERNAME)).thenReturn(1);
-        DeleteResource useCase = new DeleteResource(resources);
+        DeleteResourceById useCase = new DeleteResourceById(resources);
 
         // Act
         useCase.delete(new DeleteResourceRequest(42L), USERNAME);
@@ -74,7 +79,7 @@ class ResourceUseCasesTest {
     void shouldThrowWhenResourceCannotBeDeleted() {
         // Arrange
         when(resources.deleteByIdAndUsername(42L, USERNAME)).thenReturn(0);
-        DeleteResource useCase = new DeleteResource(resources);
+        DeleteResourceById useCase = new DeleteResourceById(resources);
 
         // Act
         assertThrows(
@@ -89,53 +94,58 @@ class ResourceUseCasesTest {
     @Test
     void shouldReturnAllResourcesForCustomerAsDtos() {
         // Arrange
+        Pageable pageable = PageRequest.of(0, 2);
         List<Resource> customerResources = List.of(
             ResourceFactory.makeResource(CODE, ADDRESS, TIMESTAMP, USERNAME),
             ResourceFactory.makeResource("Cd34Ef56", "https://example.com/other", TIMESTAMP, USERNAME)
         );
-        when(resources.findByUsername(USERNAME)).thenReturn(customerResources);
+        Page<Resource> resourcePage = new PageImpl<>(customerResources, pageable, 5);
+        when(resources.findByUsername(USERNAME, pageable)).thenReturn(resourcePage);
         GetAllResourcesByUsername useCase = new GetAllResourcesByUsername(resources);
 
         // Act
-        List<ResourceDTO> result = useCase.get(USERNAME);
+        Page<ResourceDTO> result = useCase.get(USERNAME, pageable);
 
         // Assert
-        verify(resources).findByUsername(USERNAME);
-        assertThat(result).containsExactly(
+        verify(resources).findByUsername(USERNAME, pageable);
+        assertThat(result.getContent()).containsExactly(
             new ResourceDTO(null, CODE, ADDRESS, TIMESTAMP),
             new ResourceDTO(null, "Cd34Ef56", "https://example.com/other", TIMESTAMP)
         );
+        assertThat(result.getTotalElements()).isEqualTo(5);
+        assertThat(result.getNumber()).isZero();
+        assertThat(result.getSize()).isEqualTo(2);
     }
 
     @Test
     void shouldUpdateResourceAddress() {
         // Arrange
         Resource resource = ResourceFactory.makeResource(CODE, ADDRESS, TIMESTAMP, USERNAME);
-        when(resources.findByCodeAndUsername(CODE, USERNAME)).thenReturn(Optional.of(resource));
-        UpdateResourceAddress useCase = new UpdateResourceAddress(resources);
+        when(resources.findByIdAndUsername(RESOURCE_ID, USERNAME)).thenReturn(Optional.of(resource));
+        UpdateResourceById useCase = new UpdateResourceById(resources);
         String updatedAddress = "https://example.com/updated";
 
         // Act
-        ResourceDTO result = useCase.update(new UpdateResourceRequest(CODE, updatedAddress), USERNAME);
+        ResourceDTO result = useCase.update(new UpdateResourceRequest(RESOURCE_ID, updatedAddress), USERNAME);
 
         // Assert
-        verify(resources).findByCodeAndUsername(CODE, USERNAME);
+        verify(resources).findByIdAndUsername(RESOURCE_ID, USERNAME);
         assertThat(result).isEqualTo(new ResourceDTO(null, CODE, updatedAddress, TIMESTAMP));
     }
 
     @Test
     void shouldThrowWhenResourceToUpdateDoesNotExist() {
         // Arrange
-        when(resources.findByCodeAndUsername(CODE, USERNAME)).thenReturn(Optional.empty());
-        UpdateResourceAddress useCase = new UpdateResourceAddress(resources);
+        when(resources.findByIdAndUsername(RESOURCE_ID, USERNAME)).thenReturn(Optional.empty());
+        UpdateResourceById useCase = new UpdateResourceById(resources);
 
         // Act
         assertThrows(
-            RuntimeException.class,
-            () -> useCase.update(new UpdateResourceRequest(CODE, ADDRESS), USERNAME)
+            ResourceNotFoundException.class,
+            () -> useCase.update(new UpdateResourceRequest(RESOURCE_ID, ADDRESS), USERNAME)
         );
 
         // Assert
-        verify(resources).findByCodeAndUsername(CODE, USERNAME);
+        verify(resources).findByIdAndUsername(RESOURCE_ID, USERNAME);
     }
 }

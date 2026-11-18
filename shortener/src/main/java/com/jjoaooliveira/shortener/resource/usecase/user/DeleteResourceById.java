@@ -8,17 +8,16 @@ import com.jjoaooliveira.shortener.resource.usecase.ResourceUseCase;
 
 import jakarta.transaction.Transactional;
 
-public class DeleteResource extends ResourceUseCase {
+public class DeleteResourceById extends ResourceUseCase {
 
-    public DeleteResource(Resources resources) {
+    public DeleteResourceById(Resources resources) {
         super(resources);
     }
     
     @PreAuthorize("hasAuthority('resource:delete')")
     @Transactional
-    void delete(DeleteResourceRequest request, String username) {
-        Long resourceId = request.id();
-        int deletedRows = resources.deleteByIdAndUsername(resourceId, username);
+    public void delete(final DeleteResourceRequest request, final String username) {
+        int deletedRows = resources.deleteByIdAndUsername(request.id(), username);
 
         if (deletedRows == 0) {
             throw new ResourceNotFoundException();

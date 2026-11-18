@@ -1,10 +1,9 @@
 package com.jjoaooliveira.shortener.resource.usecase.user;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 
-import com.jjoaooliveira.shortener.resource.domain.Resource;
 import com.jjoaooliveira.shortener.resource.domain.Resources;
 import com.jjoaooliveira.shortener.resource.usecase.ResourceDTO;
 import com.jjoaooliveira.shortener.resource.usecase.ResourceUseCase;
@@ -15,14 +14,10 @@ public class GetAllResourcesByUsername extends ResourceUseCase {
         super(resources);
     }
     
-    @PreAuthorize("hasAuthority('resource:read')")
-    public List<ResourceDTO> get(String username) {
-        List<Resource> resourceList = resources.findByUsername(username);
-        
-        List<ResourceDTO> resourceDTOs = resourceList.stream()
-            .map(ResourceDTO::fromResource)
-            .toList();
-        
-        return resourceDTOs;
+    @PreAuthorize("hasAuthority('resource:read:list')")
+    public Page<ResourceDTO> get(String username, Pageable pageable) {
+        return resources
+            .findByUsername(username, pageable)
+            .map(ResourceDTO::fromResource);
     }
 }

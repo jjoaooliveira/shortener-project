@@ -20,7 +20,7 @@ public class CreateResource extends ResourceUseCase {
     }
 
     @PreAuthorize("hasAuthority('resource:create')")
-    public ResourceDTO create(CreateResourceRequest request, String username) {
+    public ResourceDTO create(final CreateResourceRequest request, final String username) {
         Instant createdAt = Instant.now();
         String code = shortCodeGenerator.generate();
         String address = request.address();

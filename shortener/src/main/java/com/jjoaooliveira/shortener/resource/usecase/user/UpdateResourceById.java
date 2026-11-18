@@ -5,24 +5,25 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import com.jjoaooliveira.shortener.resource.domain.Resource;
 import com.jjoaooliveira.shortener.resource.domain.Resources;
 import com.jjoaooliveira.shortener.resource.usecase.ResourceDTO;
+import com.jjoaooliveira.shortener.resource.usecase.ResourceNotFoundException;
 import com.jjoaooliveira.shortener.resource.usecase.ResourceUseCase;
 
 import jakarta.transaction.Transactional;
 
-public class UpdateResourceAddress extends ResourceUseCase {
+public class UpdateResourceById extends ResourceUseCase {
 
-    public UpdateResourceAddress(Resources resources) {
+    public UpdateResourceById(Resources resources) {
         super(resources);
     }
 
     @PreAuthorize("hasAuthority('resource:update')")
     @Transactional
-    ResourceDTO update(UpdateResourceRequest request, String username) {
-        String code = request.code();
+    public ResourceDTO update(final UpdateResourceRequest request, final String username) {
+        final Long id = request.id();
         
         Resource resourceToUpdate = resources
-            .findByCodeAndUsername(code, username)
-            .orElseThrow(RuntimeException::new);
+            .findByIdAndUsername(id, username)
+            .orElseThrow(ResourceNotFoundException::new);
         
         resourceToUpdate.updateAddress(request.address());
 
