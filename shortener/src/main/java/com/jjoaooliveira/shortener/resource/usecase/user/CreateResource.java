@@ -2,6 +2,7 @@ package com.jjoaooliveira.shortener.resource.usecase.user;
 
 import java.time.Instant;
 
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import com.jjoaooliveira.shortener.resource.domain.Resource;
@@ -20,6 +21,7 @@ public class CreateResource extends ResourceUseCase {
     }
 
     @PreAuthorize("hasAuthority('resource:create')")
+    @CacheEvict(value = "resources", allEntries = true)
     public ResourceDTO create(final CreateResourceRequest request, final String username) {
         Instant createdAt = Instant.now();
         String code = shortCodeGenerator.generate();

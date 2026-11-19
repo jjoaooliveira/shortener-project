@@ -1,5 +1,6 @@
 package com.jjoaooliveira.shortener.resource.usecase.user;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,6 +16,10 @@ public class GetAllResourcesByUsername extends ResourceUseCase {
     }
     
     @PreAuthorize("hasAuthority('resource:read:list')")
+    @Cacheable(
+        value = "resources", 
+        key = "{#username, #pageable.pageNumber, #pageable.pageSize, #pageable.sort}"
+    )
     public Page<ResourceDTO> get(String username, Pageable pageable) {
         return resources
             .findByUsername(username, pageable)

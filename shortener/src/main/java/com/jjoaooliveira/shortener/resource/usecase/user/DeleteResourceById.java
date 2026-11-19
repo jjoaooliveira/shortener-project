@@ -1,5 +1,6 @@
 package com.jjoaooliveira.shortener.resource.usecase.user;
 
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import com.jjoaooliveira.shortener.resource.domain.Resources;
@@ -15,6 +16,7 @@ public class DeleteResourceById extends ResourceUseCase {
     }
     
     @PreAuthorize("hasAuthority('resource:delete')")
+    @CacheEvict(value = "resources", allEntries = true)
     @Transactional
     public void delete(final DeleteResourceRequest request, final String username) {
         int deletedRows = resources.deleteByIdAndUsername(request.id(), username);

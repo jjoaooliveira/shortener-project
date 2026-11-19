@@ -1,5 +1,6 @@
 package com.jjoaooliveira.shortener.resource.usecase.user;
 
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import com.jjoaooliveira.shortener.resource.domain.Resource;
@@ -17,6 +18,7 @@ public class UpdateResourceById extends ResourceUseCase {
     }
 
     @PreAuthorize("hasAuthority('resource:update')")
+    @CacheEvict(value = "resources", allEntries = true)
     @Transactional
     public ResourceDTO update(final Long id, final UpdateResourceRequest request, final String username) {
         Resource resourceToUpdate = resources
