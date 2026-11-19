@@ -195,6 +195,6 @@ class ResourceTest {
         });
 
         // Assert
-        assertThat(exception.getMessage()).isEqualTo("Resource customerId is null");
+        assertThat(exception.getMessage()).isEqualTo("Resource username is null");
     }
 }
